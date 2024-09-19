@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 .control-error {
-  color: #ffca99;
+  color: #030303;
   font-size: 0.8rem;
   height: 2rem;
   padding: 0.5rem 0;
