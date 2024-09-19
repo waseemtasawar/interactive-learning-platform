@@ -1,17 +1,27 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-
+import Input from "../components/Input";
+import { isEmail, isNotEmpty, hasMinLength } from "../hooks/validation";
+import { useInput } from "../hooks/useInput.js";
 const Login = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
   const navigate = useNavigate();
+
+  const {
+    value: emailValue,
+    handleInputChange: handleEmailChnage,
+    handleInputBlur: handleEmailBlur,
+    hasError: emailHasError,
+  } = useInput("", (value) => isEmail(value) && isNotEmpty(value));
+  const {
+    value: passwordValue,
+    handleInputChange: handlePasswordChnage,
+    handleInputBlur: handlePassowrdBlur,
+    hasError: passwordHasError,
+  } = useInput("", (value) => hasMinLength(value, 8));
 
   const handleLogin = (e) => {
     e.preventDefault();
-    // Call your AuthService here to authenticate the user
-    // If successful, redirect the user to the dashboard or another page
     console.log("Logging in:", { email, password });
-    // navigate('/dashboard'); // Navigate to dashboard on successful login
   };
 
   return (
@@ -20,34 +30,29 @@ const Login = () => {
         <h2 className="text-2xl font-bold text-center text-gray-700 mb-6">
           Login
         </h2>
-        <form onSubmit={handleLogin} className="space-y-4">
-          <div>
-            <label htmlFor="email" className="block text-gray-600 mb-2">
-              Email
-            </label>
-            <input
-              type="email"
-              id="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-3 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring focus:ring-indigo-300"
-              required
-            />
-          </div>
-          <div>
-            <label htmlFor="password" className="block text-gray-600 mb-2">
-              Password
-            </label>
-            <input
-              type="password"
-              id="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="w-full px-3 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring focus:ring-indigo-300"
-              required
-            />
-          </div>
-          <div>
+        <form onSubmit={handleLogin} className="space-y-6">
+          <Input
+            label="Email"
+            id="email"
+            value={emailValue}
+            onChange={handleEmailChnage}
+            onBlur={handleEmailBlur}
+            error={emailHasError && "Please enter a valid Email"}
+            className="w-full px-4 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring focus:ring-indigo-300"
+            required
+          />
+          <Input
+            label="Password"
+            id="password"
+            value={passwordValue}
+            onChange={handlePasswordChnage}
+            onBlur={handlePassowrdBlur}
+            error={passwordHasError && "Password must be greater then 8 "}
+            className="w-full px-4 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring focus:ring-indigo-300"
+            required
+          />
+
+          <div className="flex flex-col">
             <button
               type="submit"
               className="w-full bg-indigo-600 text-white py-2 px-4 rounded-lg hover:bg-indigo-700 transition duration-200"
@@ -55,6 +60,7 @@ const Login = () => {
               Login
             </button>
           </div>
+
           <div className="text-sm text-center text-gray-500">
             Don't have an account?
             <a
