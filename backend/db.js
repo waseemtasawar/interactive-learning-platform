@@ -1,14 +1,8 @@
 const mongoose = require("mongoose");
-
+require("dotenv").config();
 const connectDb = async () => {
   try {
-    await mongoose.connect(
-      "mongodb+srv://Waseem:Wasim1436@cluster0.qitncm8.mongodb.net/learning-platform",
-      {
-        useNewUrlParser: true,
-        useUnifiedTopology: true,
-      }
-    );
+    await mongoose.connect(process.env.MONGO_URI, {});
     console.log("MongoDB Connected....");
   } catch (err) {
     console.error(err.message);
