@@ -45,6 +45,13 @@ const SignUp = () => {
       confirmPassword: confrmPasswordValue,
     };
 
+    // Check if passwords match before sending the request
+    if (passwordValue !== confrmPasswordValue) {
+      console.error("Passwords do not match");
+      alert("Passwords do not match");
+      return; // Stop the submission
+    }
+
     try {
       const response = await axios.post(
         "http://localhost:5000/api/auth/signup",

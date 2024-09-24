@@ -19,6 +19,7 @@ router.post("/signup", async (req, res) => {
       username,
       phoneNumber,
       password,
+      confirmPassword,
     });
     await user.save();
     res.status(201).json({ msg: "User registered successfully" });
