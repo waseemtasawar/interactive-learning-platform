@@ -15,6 +15,18 @@ const SignUp = () => {
     handleInputBlur: handlePassowrdBlur,
     hasError: passwordHasError,
   } = useInput("", (value) => hasMinLength(value, 8));
+  const {
+    value: numberValue,
+    handleInputChange: handleNumberChnage,
+    handleInputBlur: handleNumberBlur,
+    hasError: NumberHasError,
+  } = useInput("", (value) => hasMinLength(value, 11));
+  const {
+    value: usernameValue,
+    handleInputChange: handleUsernameChnage,
+    handleInputBlur: handleUsernameBlur,
+    hasError: usernameHasError,
+  } = useInput("", (value) => hasMinLength(value, 8));
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -31,12 +43,6 @@ const SignUp = () => {
         <form onSubmit={handleSubmit} className="space-y-4">
           {/* Email */}
           <div>
-            <label
-              htmlFor="email"
-              className="block text-sm font-medium text-gray-700"
-            >
-              Email
-            </label>
             <Input
               label="Email"
               id="email"
@@ -51,64 +57,44 @@ const SignUp = () => {
 
           {/* Username */}
           <div>
-            {/* <label
-              htmlFor="username"
-              className="block text-sm font-medium text-gray-700"
-            >
-              Username
-            </label>
-            <input
-              type="text"
-              name="username"
-              id="username"
-              value={formData.username}
-              onChange={handleChange}
-              required
-              className="w-full px-3 py-2 mt-1 text-gray-700 bg-gray-100 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            /> */}
             <Input
-              label="UerName"
+              label="Username"
               id="username"
               name="username"
-              value={passwordValue}
-              onChange={handlePasswordChnage}
-              onBlur={handlePassowrdBlur}
-              error={passwordHasError && "Password must be greater then 8 "}
+              type="text"
+              value={usernameValue}
+              onChange={handleUsernameChnage}
+              onBlur={handleUsernameBlur}
+              error={
+                usernameHasError && "Username must be alpahbet with number"
+              }
               className="w-full px-4 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring focus:ring-indigo-300"
               required
             />
           </div>
 
           {/* Number */}
-          {/* <div>
-            <label
-              htmlFor="number"
-              className="block text-sm font-medium text-gray-700"
-            >
-              Phone Number
-            </label>
-            <input
-              type="tel"
-              name="number"
+          <div>
+            <Input
+              label="Phone Number"
               id="number"
-              value={formData.number}
-              onChange={handleChange}
+              name="number"
+              type="tel"
+              value={numberValue}
+              onChange={handleNumberChnage}
+              onBlur={handleNumberBlur}
+              error={NumberHasError && "phone number must be equal to 11"}
+              className="w-full px-4 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring focus:ring-indigo-300"
               required
-              className="w-full px-3 py-2 mt-1 text-gray-700 bg-gray-100 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
-          </div> */}
+          </div>
 
           {/* Password */}
           <div>
-            <label
-              htmlFor="password"
-              className="block text-sm font-medium text-gray-700"
-            >
-              Password
-            </label>
             <Input
               label="Password"
               id="password"
+              type="password"
               value={passwordValue}
               onChange={handlePasswordChnage}
               onBlur={handlePassowrdBlur}
@@ -120,15 +106,10 @@ const SignUp = () => {
 
           {/* Confirm Password */}
           <div>
-            <label
-              htmlFor="confirmPassword"
-              className="block text-sm font-medium text-gray-700"
-            >
-              Confirm Password
-            </label>
             <Input
-              label="Password"
+              label="Confirm Password"
               id="password"
+              type="password"
               value={passwordValue}
               onChange={handlePasswordChnage}
               onBlur={handlePassowrdBlur}
