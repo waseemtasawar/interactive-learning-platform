@@ -1,6 +1,7 @@
 import { useInput } from "../hooks/useInput.js";
 import Input from "../components/Input";
 import { isEmail, isNotEmpty, hasMinLength } from "../hooks/validation";
+import axios from "axios";
 
 const SignUp = () => {
   const {
@@ -16,6 +17,12 @@ const SignUp = () => {
     hasError: passwordHasError,
   } = useInput("", (value) => hasMinLength(value, 8));
   const {
+    value: confrmPasswordValue,
+    handleInputChange: handleconfrmPasswordChnage,
+    handleInputBlur: handleconfrmPassowrdBlur,
+    hasError: confrmpasswordHasError,
+  } = useInput("", (value) => hasMinLength(value, 8));
+  const {
     value: numberValue,
     handleInputChange: handleNumberChnage,
     handleInputBlur: handleNumberBlur,
@@ -28,10 +35,25 @@ const SignUp = () => {
     hasError: usernameHasError,
   } = useInput("", (value) => hasMinLength(value, 8));
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Handle form submission logic here
-    // console.log(formData);
+    const userData = {
+      email: emailValue,
+      username: usernameValue,
+      phoneNumber: numberValue,
+      password: passwordValue,
+      confirmPassword: confrmPasswordValue,
+    };
+
+    try {
+      const response = await axios.post(
+        "http://localhost:5000/api/auth/signup",
+        userData
+      );
+      console.log(response.data);
+    } catch (error) {
+      console.error("Error signing up:", error.response.data);
+    }
   };
 
   return (
@@ -108,12 +130,14 @@ const SignUp = () => {
           <div>
             <Input
               label="Confirm Password"
-              id="password"
+              id="confirmPassword"
               type="password"
-              value={passwordValue}
-              onChange={handlePasswordChnage}
-              onBlur={handlePassowrdBlur}
-              error={passwordHasError && "Password must be greater then 8 "}
+              value={confrmPasswordValue}
+              onChange={handleconfrmPasswordChnage}
+              onBlur={handleconfrmPassowrdBlur}
+              error={
+                confrmpasswordHasError && "Password must be greater then 8 "
+              }
               className="w-full px-4 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring focus:ring-indigo-300"
               required
             />
