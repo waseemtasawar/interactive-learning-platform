@@ -4,6 +4,8 @@ const app = express();
 const authRoutes = require("./routes/auth");
 const cors = require("cors");
 require("dotenv").config();
+
+const dashboardRouter = require("./routes/dashboard");
 // Connect to the database
 connectDb();
 
@@ -21,6 +23,9 @@ app.use(express.json());
 // Use for SignUp routes
 app.use("/api/auth", authRoutes);
 
+// DashBoard Route
+
+app.use("/api/dashboard", dashboardRouter);
 // Set the PORT
 const PORT = process.env.PORT || 5000;
 
