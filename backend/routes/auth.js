@@ -35,10 +35,10 @@ router.post("/signup", async (req, res) => {
 
 // Login Route
 router.post("/login", async (req, res) => {
-  const { eamil, password } = req.body;
+  const { email, password } = req.body;
 
   try {
-    let user = await User.findOne({ eamil });
+    let user = await User.findOne({ email });
     if (!user) {
       return res.status(404).json({ msg: "Invalid credentials" });
     }
@@ -54,6 +54,7 @@ router.post("/login", async (req, res) => {
         username: user.username,
       },
     };
+
     jwt.sign(payload, JWT_SECRET, { expiresIn: "1h" }, (err, token) => {
       if (err) throw err;
       res.json({ token, msg: "Login Successfully" });

@@ -1,9 +1,9 @@
 const express = require("express");
 const router = express.Router();
 
-const auth = require("../middleware/auth");
+const authMiddleware = require("../middleware/authMiddleware");
 
-router.get("/", auth, async (req, res) => {
+router.get("/", authMiddleware, async (req, res) => {
   try {
     res.json({ mag: `Welcome to Dashboard, ${req.user.username}` });
   } catch (error) {
