@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import Input from "../components/Input";
 import { isEmail, isNotEmpty, hasMinLength } from "../hooks/validation";
 import { useInput } from "../hooks/useInput.js";
+import axios from "axios";
 const Login = () => {
   const navigate = useNavigate();
 
@@ -19,12 +20,40 @@ const Login = () => {
     hasError: passwordHasError,
   } = useInput("", (value) => hasMinLength(value, 8));
 
-  const handleLogin = (e) => {
+  const [errorMessage, setErrorMessage] = useState("");
+  const [seccessMessage, setSuccessMessage] = useState("");
+
+  const handleLogin = async (e) => {
     e.preventDefault();
     if (emailHasError || passwordHasError) {
       return;
     }
-    console.log(emailValue, passwordValue);
+    const userData = {
+      email: emailValue,
+      password: passwordValue,
+    };
+
+    try {
+      const response = await axios.post(
+        "http://localhost5000:api/auth/signup",
+        userData
+      );
+      console.log(response.data);
+      setSuccessMessage(response.data.msg);
+      setErrorMessage("");
+
+      // redirect to DashhBoard
+      navigate("/dashboard");
+    } catch (error) {
+      console.error(
+        "Error signing up:",
+        error.response ? error.response.data.msg : error.message
+      );
+      setErrorMessage(
+        error.response ? error.response.data.msg : "Login failed."
+      );
+      setSuccessMessage("");
+    }
   };
 
   return (
@@ -33,6 +62,15 @@ const Login = () => {
         <h2 className="text-2xl font-bold text-center text-gray-700 mb-6">
           Login
         </h2>
+        {errorMessage && (
+          <div className="text-red-500 text-center mb-4">{errorMessage}</div>
+        )}
+        {seccessMessage && (
+          <div className="text-green-500 text-center mb-4">
+            {seccessMessage}
+          </div>
+        )}
+
         <form onSubmit={handleLogin} className="space-y-6">
           <Input
             label="Email"
