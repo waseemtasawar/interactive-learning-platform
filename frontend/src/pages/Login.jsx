@@ -40,7 +40,7 @@ const Login = () => {
         "http://localhost:5000/api/auth/login",
         loginData,
         {
-          withCredentials: true, // If handling cookies/JWT on server-side
+          withCredentials: true,
         }
       );
 

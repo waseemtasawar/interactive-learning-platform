@@ -1,68 +1,72 @@
-// src/pages/Dashboard.js
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import axios from "axios";
+import jwt_decode from "jwt-decode"; // Import jwt-decode
 import { AuthContext } from "../context/AuthContext";
-import { useNavigate } from "react-router-dom";
 
 const Dashboard = () => {
-  const { auth, logout } = useContext(AuthContext);
-  const navigate = useNavigate();
-  const [message, setMessage] = useState("");
-  const [loading, setLoading] = useState(true);
+  const { auth, setAuth } = useContext(AuthContext);
+  const [userData, setUserData] = useState(null); // Define userData state
 
   useEffect(() => {
-    const fetchDashboard = async () => {
-      if (!auth.token) {
-        setLoading(false); // Stop loading if no token
-        return;
-      }
-
+    const fetchUserData = async () => {
       try {
+        const decodedToken = jwt_decode(auth?.token); // Decode the token
+        const currentTime = Date.now() / 1000; // Current time in seconds
+
+        if (decodedToken.exp < currentTime) {
+          console.log("Session expired, please log in again.");
+          setAuth(null); // Clear auth state
+          localStorage.removeItem("token"); // Remove token from localStorage
+          return;
+        }
+
         const response = await axios.get(
-          "http://localhost:5000/api/dashboard",
+          "http://localhost:5000/api/auth/dashboard",
           {
             headers: {
-              Authorization: `Bearer ${auth.token}`, // Ensure this token is valid
+              Authorization: `Bearer ${auth?.token}`,
             },
           }
         );
-        setMessage(response.data.msg);
+
+        setUserData(response.data); // Set user data in state
+        console.log("User Data:", response.data);
       } catch (error) {
-        console.error("Error fetching dashboard:", error);
-        if (error.response?.status === 401) {
-          logout();
-          navigate("/login");
-        }
-      } finally {
-        setLoading(false); // Stop loading regardless of success or error
+        console.error("Error fetching user data:", error);
       }
     };
 
-    fetchDashboard();
-  }, [auth.token]);
+    if (auth?.token) {
+      fetchUserData();
+    }
+  }, [auth, setAuth]);
 
   const handleLogout = () => {
-    logout();
-    navigate("/login");
+    setAuth(null);
+    localStorage.removeItem("token");
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <div className="max-w-md w-full bg-white shadow-md rounded-lg p-8">
-        <h2 className="text-2xl font-bold text-center text-gray-700 mb-6">
+    <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100">
+      <div className="w-full max-w-md p-8 bg-white rounded-lg shadow-md">
+        <h2 className="text-2xl font-bold text-gray-700 text-center mb-6">
           Dashboard
         </h2>
-        {loading ? (
-          <p className="text-center text-gray-600">Loading...</p>
+        {userData ? (
+          <div>
+            <p>Welcome, {userData.username}!</p>
+            <p>Email: {userData.email}</p>
+            <p>Phone: {userData.phoneNumber}</p>
+            <button
+              onClick={handleLogout}
+              className="mt-4 w-full bg-red-600 text-white py-2 px-4 rounded-lg hover:bg-red-700 transition duration-200"
+            >
+              Logout
+            </button>
+          </div>
         ) : (
-          <p className="text-center text-gray-600 mb-4">{message}</p>
+          <p>Loading...</p>
         )}
-        <button
-          onClick={handleLogout}
-          className="w-full bg-red-500 text-white py-2 px-4 rounded-lg hover:bg-red-600 transition duration-200"
-        >
-          Logout
-        </button>
       </div>
     </div>
   );
