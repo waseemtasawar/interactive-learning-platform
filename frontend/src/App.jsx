@@ -4,10 +4,10 @@ import Login from "./pages/Login";
 import SignUp from "./pages/Signup";
 import MainScreen from "./components/MainScreen";
 import Dashboard from "./pages/dashboard";
-
+import AuthProvider from "./context/AuthContext";
 function App() {
   return (
- 
+    <AuthProvider>
       <Router>
         <Routes>
           <Route path="/" element={<MainScreen />} />
@@ -16,7 +16,7 @@ function App() {
           <Route path="/dashboard" element={<Dashboard />} />
         </Routes>
       </Router>
-    
+    </AuthProvider>
   );
 }
 
