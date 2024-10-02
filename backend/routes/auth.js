@@ -32,7 +32,9 @@ router.post("/signup", async (req, res) => {
       email,
       username,
       phoneNumber,
-      password: hashedPassword, // Save the hashed password
+      password,
+      confirmPassword,
+      password: hashedPassword, /// Save the hashed password
     });
 
     await user.save();
