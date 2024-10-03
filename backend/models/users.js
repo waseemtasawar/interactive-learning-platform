@@ -27,11 +27,11 @@ const registerUsers = new Schema({
     required: [true, "Password is required"],
     minlength: [8, "Password must be at least 8 characters long"],
   },
-  confirmPassword: {
-    type: String,
-    required: [true, "Password is required"],
-    minlength: [8, "Password must be at least 8 characters long"],
-  },
+  // confirmPassword: {
+  //   type: String,
+  //   required: [true, "Password is required"],
+  //   minlength: [8, "Password must be at least 8 characters long"],
+  // },
   createdAt: {
     type: Date,
     default: Date.now,

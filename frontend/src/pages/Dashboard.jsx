@@ -21,7 +21,7 @@ const Dashboard = () => {
         }
 
         const response = await axios.get(
-          "http://localhost:5000/api/auth/dashboard",
+          "/api/auth/dashboard",
           {
             headers: {
               Authorization: `Bearer ${auth?.token}`,
